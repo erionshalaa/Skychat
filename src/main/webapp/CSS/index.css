@@ -7,17 +7,16 @@ body {
 	line-height: 1.6;
 	margin: 0;
 	min-height: 100vh;
-	
 }
+
 ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-h2,
-h3,
-a {
+
+.header a,h2,h3 {
 	color: white;
 	text-decoration: none;
 }
@@ -58,24 +57,18 @@ a {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
+	z-index: 999;
+	align-items: center;
+	width: 100%;
+	height:70px;
+	position:fixed;
 }
 
-body{
-	height:1000px;
-}
-@media (min-width: 769px) {
+
+
 	.header,
 	.main-nav {
 		display: flex;
-	}
-	.header {
-		flex-direction: column;
-		align-items: center;
-		width: 100%;
-		height:70px;
-		margin: 0 auto;
-		max-width: auto;
-		position:fixed;
 	}
 
 
@@ -90,7 +83,7 @@ body{
 	.main-nav li{
 	margin-right:35px;
 	}
-}
+
 
 .header button{
 	padding:10px 25px;
@@ -148,9 +141,310 @@ body{
 	color: skyblue;
 }
 
+.backpic{
+	width:55%;
+	position: relative;
+	left:45%;
+	top:35px;
+	display:inline-block;
+	  
+}
+.container{
+	 animation: fadeInAnimation ease 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+   
+}
 
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+     }
+}
 
+.text-container h1{
+	margin:0;
+	display:inline-block;
+	position:relative;
+	top:300px;
+	left:15%;
+	font-family:"Open Sans", sans-serif;
+	font-size: 2.75rem;
+	line-height: 3.5rem;
+	color : #5e72e4;	
+}
+.text-container p{
+	color:#5e6576;
+	position:relative;
+	top:390px;
+	right:12.5%;
+	font-size: 1.125rem;
+	line-height: 1.75rem;
+	margin:0;
+	display:inline-block;
+}
 
+.buttons button{
+	display:inline-block;
+	position:relative;
+	left:15%;
+	padding:12px 27px;
+	font-weight:bold;
+	border-radius:6px;
+	border:none;
+	cursor:pointer;
+	background-color: #5e72e4;
+	color:white;
+    transition: all 0.6s;
+    top:420px;
+}
 
+.buttons button:hover{opacity:0.8}
+.buttons button:active{opacity:0.6}
+.contact{
+	display:inline-block;
+	position:relative;
+	left:20%;
+	top:420px;
+	text-decoration: none;
+}
 
+.container h3{
+	color:black;
+	text-align:center;
+	margin-top:150px;
+	font-size:46px;
+
+    line-height: 1px;
+}
+
+.title::after{
+   content: "";
+    background: #5e72e4;
+    width: 80px;
+    height: 12px;
+    border-radius: 12px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    
+}
+.sec-pic{
+
+    overflow: hidden;
+    width:55%;
+	margin-top:120px;
+	display:inline-block;
+	
+}
+.sec-line {
+	position: relative;
+	
+	bottom:300px;
+	left:80px;
+	font-size:32px;
+  color: #5e72e4;
+  padding-left: 20px;
+  padding-right: 20px;
+  display:inline-block;
+	
+}
+.sec-line::after{
+   content: "";
+    background: #5e72e4;
+    width: 12px;
+    height: 12px;
+    border-radius: 20px;
+    position: absolute;
+   	bottom:61px;
+   	
+    transform: translateX(-170%);
+    
+}
+.pclass,.third-p{
+	color: #5e6576;
+    position: relative;
+    
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    padding-left: 20px;
+  	padding-right: 20px;
+    display: inline-block;
+}
+.pclass{
+	bottom:335px;
+    left:60.7%;
+}
+.third-p{
+	margin-left:141px;
+	margin-top:50px;
+}
+.third-pic{
+	float:right;
+	width:50%;
+	margin-right:100px;
+}
+.third-line{
+	font-size:32px;
+	color:#5e72e4;
+	margin-left:160px;
+	top:80px;
+	position:relative;
+}
+.third-line::after{
+	content: "";
+    background: #5e72e4;
+    width: 12px;
+    height: 12px;
+    border-radius: 20px;
+    position: absolute;
+   	bottom:20px;
+   	
+    transform: translateX(-170%);
+}
+.background{
+	position: absolute;
+    opacity: .1;
+    background: url(https://awrora2.netlify.app/images/social/liquid-deco.svg) no-repeat transparent;
+    background-size: 100%;
+    width: 1122px;
+    height: 950px;
+   	transform: translate(-80%, 0);
+    
+}
+.background2{
+	position: absolute;
+    opacity: .1;
+    background: url(https://awrora2.netlify.app/images/social/liquid-deco.svg) no-repeat transparent;
+    background-size: 100%;
+    width: 1122px;
+    height: 950px;
+   	transform: translate(35.4%,95%);
+   	background-position: 400px 0;
+}
+.background3{
+	margin-top:100px;
+	position: absolute;
+	opacity: 0.08;
+    background: url(https://mars-metcdn-com.global.ssl.fastly.net/content/uploads/sites/101/2019/04/30174046/footer-background.png) no-repeat transparent;
+    background-size: 100%;
+    width: 100%;
+    height: 50%;
+   	
+   	transform: scaleX(-1);
+}
+#ftitle{
+	font-size:32px;
+	font-weight:bold;
+	color:#5e72e4;
+	text-align:center;
+	display:inline-block;
+	margin-top:50px;
+	margin-left:42%;
+}
+.social-icons{
+	padding:30px;
+	
+  text-align: center;
+}
+.social-icons a{
+  line-height:30px;
+  font-size:30px;
+  margin: 0 5px;
+  text-decoration:none;
+  
+}
+.social-icons a i{
+	line-height:30px;
+  font-size:30px;
+  -webkit-transition: all 200ms ease-in;
+  -webkit-transform: scale(1); 
+  -ms-transition: all 200ms ease-in;
+  -ms-transform: scale(1); 
+  -moz-transition: all 200ms ease-in;
+  -moz-transform: scale(1);
+  transition: all 200ms ease-in;
+  transform: scale(1);
+}
+.social-icons a:hover i{
+  box-shadow: 0px 0px 150px #000000;
+  z-index: 2;
+  -webkit-transition: all 200ms ease-in;
+  -webkit-transform: scale(1.5);
+  -ms-transition: all 200ms ease-in;
+  -ms-transform: scale(1.5);   
+  -moz-transition: all 200ms ease-in;
+  -moz-transform: scale(1.5);
+  transition: all 200ms ease-in;
+  transform: scale(1.5);
+}
+.ulfooter{
+	display:flex;
+	align-content: flex-start;
+	margin-left:80px;
+	margin-top:45px;
+}
+.ulfooter a{
+	font-size: 1rem;
+    line-height: 1.5rem;
+    color: rgba(0,0,0,.54);
+    margin-left:40px;
+}
+#copyright{
+	margin-left:750px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.loader_bg{
+	position: fixed;
+	z-index:99999;
+	background:#fff;
+	width:100%;
+	height:100%;
+	
+}
+.loader{
+	border: 0 solid transparent;
+	border-radius:50%;
+	width:150px;
+	height:150px;
+	position: absolute;
+	top: calc(50vh - 75px);
+	left:calc(50vw - 75px);
+}
+.loader:before,.loader:after{
+	content:"";
+	border: 1em solid #5e72e4;
+	border-radius:50%;
+	width:inherit;
+	height:inherit;
+	position: absolute;
+	top:0;
+	left:0;
+	animation:loader 2s linear infinite;
+	opacity:0;
+}
+.loader:before{
+	animation-delay:.5s;
+}
+@keyframes loader{
+	0%{
+	transform:scale(0);
+	opacity:0;
+	}
+	50%{
+	opacity:1;
+	}
+	100%{
+	transform:scale(1);
+	opacity:0;
+	}
+}
+	
 
