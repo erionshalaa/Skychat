@@ -4,15 +4,23 @@
 <meta charset="UTF-8">
 <title>Skychat</title>
 <link rel="stylesheet" type="text/css" href="CSS/index.css">
+<link rel="stylesheet" type="text/css" href="CSS/loader.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="website icon" type="png" href="Pictures/applogo.png">
-
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+	$(function() {
+    $("#includeHtml").load("footer.html");
+    });
+</script>
 </head>
 <body>
+
  	<div class="loader_bg">
  	<div class="loader"></div>
  	</div>
-  	<div class="header">
+ 	
+ 	<div class="header">
   		<img class="logoicon" src="Pictures/applogo.png" >
 		<h1 class="logo"><a href="index.html">Skychat</a></h1>
        	<ul class="main-nav">
@@ -22,9 +30,10 @@
           <li><a href="#">Contact</a></li>
           <li><a href="#">Account</a></li>
       	</ul>
-      	<a href="#"><button class="login">Log in</button></a>
-      	<a href="#"><button class="signup">Sign up</button></a>
+      	<a href="login.html"><button class="login">Log in</button></a>
+      	<a href="signup.html"><button class="signup">Sign up</button></a>
      </div>
+  	
      
      <div class="container"> 
     
@@ -58,32 +67,10 @@
      		
      		</div>
      		</div>
-     		<div class="background3"></div>
-     		<div>
-     		<div id="ftitle">Stay Connected</div><br>
-     		<div class="social-icons">
-			  <a href="#"  title="facebook"> 
-			    <i class="fa fa-facebook-square" aria-hidden="true"></i>
-			  </a>
-			  <a href="#" title="twitter"> 
-			    <i class="fa fa-twitter-square" aria-hidden="true"></i>
-			  </a>
-			  <a href="#" title="instagram">  
-			    <i class="fa fa-instagram" aria-hidden="true"></i>
-			  </a>
-			  <a href="#" title="youtube">
-			    <i class="fa fa-youtube-square" aria-hidden="true"></i>
-			  </a>
-			  <a href="#" title="linkedin">
-			    <i class="fa fa-linkedin-square" aria-hidden="true"></i>
-			  </a>
-			  <ul class="ulfooter">
-			  <li><a href="#">Terms & Conditions</a></li>
-			  <li><a href="#">Privacy Policy</a></li>
-			  <li> <a href="#" id="copyright">Copyright © Skychat</a></li>
-			  </ul>
-			
-			</div>
+     		
+     		
+     		<div id="includeHtml"></div>
+     		
      		</div>
      </div>
      <script type="text/javascript" src="JS/index.js"></script>

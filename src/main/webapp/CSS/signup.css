@@ -1,0 +1,11 @@
+.login-form input[type="password"] 
+,.login-form input[type="text"]{
+  width: 49%;
+}
+.names-input,.pw-input{
+	display:flex;
+  flex-direction:row;
+}
+.pw-input input:last-child,.names-input input:last-child{
+	margin-left:2%;
+}
