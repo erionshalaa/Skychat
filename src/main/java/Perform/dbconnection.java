@@ -6,11 +6,12 @@ import java.sql.SQLException;
 
 public class dbconnection {
     public static void main(String[] args) throws ClassNotFoundException {
+    	Connection connection = null;
         try{
         	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         	String connectionUrl = 
         			"jdbc:sqlserver://E-User;databaseName=chatapp;integratedSecurity=true;encrypt=false;";
-        	Connection connection = DriverManager.getConnection(connectionUrl);
+        	connection = DriverManager.getConnection(connectionUrl);
         	System.out.println("Connected");
         }
         catch (SQLException e) {

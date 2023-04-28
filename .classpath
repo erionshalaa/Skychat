@@ -9,5 +9,6 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="C:/Program Files/Microsoft JDBC Driver 12.2 for SQL Server/sqljdbc_12.2/enu/mssql-jdbc-12.2.0.jre11.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Servlet Api/javax.servlet-api-4.0.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
