@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 
@@ -40,7 +43,7 @@ public class registerdb {
 		loadDriver(dbDriver);
 		Connection conn = getConnection();
 		String result = "";
-		String sql = "INSERT INTO users VALUES(?,?,?,?)";
+		String sql = "INSERT INTO users(name,surname,email,password) VALUES(?,?,?,?)";
 		PreparedStatement ps;
 		try {
 			ps = conn.prepareStatement(sql);
@@ -83,6 +86,58 @@ public class registerdb {
 		}
 		return status;
 	}
+	public boolean checkAccess(User user) {
+		loadDriver(dbDriver);
+		Connection conn = getConnection();
+		boolean access = false;
+		String sql = "select access from users where email = ? and password = ?";
+		PreparedStatement ps;
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, user.getEmail());
+			ps.setString(2, user.getPword());
+			
+			try(ResultSet rs = ps.executeQuery()){
+				if (rs.next()) {
+		            String role = rs.getString("access");
+		            if (role.equals("user")) {
+		                access = true;
+		            }
+	            }
+	        }
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return access;
+	}
+	
 
+	public ArrayList<User> selectallusers() {
+	    loadDriver(dbDriver);
+	    Connection conn = getConnection();
+	    ArrayList<User> users = new ArrayList<>();
+	    String sql = "SELECT * FROM users";
+	    PreparedStatement ps;
+	    try {
+	        ps = conn.prepareStatement(sql);
+	        ResultSet rs = ps.executeQuery();
+	        while (rs.next()) {
+	        	String id = rs.getString("userid");
+	            String email = rs.getString("email");
+	            String pword = rs.getString("password");
+	            String fname = rs.getString("name");
+	            String lname = rs.getString("surname");
+	            String access = rs.getString("access");
+	            User user = new User(id,fname,lname,email,pword,access);
+	            users.add(user);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return users;
+	}
 	
 }

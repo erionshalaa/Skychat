@@ -25,15 +25,21 @@
 		<h1 class="logo"><a href="index.jsp">Skychat</a></h1>
        	<ul class="main-nav">
            <li><a href="index.jsp">Homepage</a></li>
-       	  <li><a href="#about" class="scroll">Features</a></li>
-          <li><a href="#">Dashboard</a></li>
+       	  <li><a href="index.jsp">Features</a></li>
+           <% HttpSession loginsession = request.getSession(false);
+	         boolean userLogin = loginsession != null && loginsession.getAttribute("userLogin") != null && (boolean) loginsession.getAttribute("userLogin"); 
+	         if(userLogin){%>
+          <li><a href="dashboard.jsp">Dashboard</a></li>
+          <% }else{%>
+          
+          <li><a href="login.jsp">Dashboard</a></li>
+          <%} %>
           <li><a href="#" >About</a></li>
           <li><a href="contact.jsp">Contact</a></li>
       	</ul>
       	<%
 		    // Check if the user is logged in
-		     HttpSession loginsession = request.getSession(false);
-	         boolean userLogin = loginsession != null && loginsession.getAttribute("userLogin") != null && (boolean) loginsession.getAttribute("userLogin");
+		     
 	         if(userLogin) {
 	        	 
 		    %>
@@ -110,7 +116,7 @@
       </div>
       <div class="pw-input">
       <input placeholder="Password" id="input-33" type="password" name="pword">
-      <input placeholder="Confirm Password" id="input-33" type="password">
+      <input placeholder="Confirm Password" id="input-33" type="password" name="confirm">
       </div>
       
       <input type="submit" value="CONTINUE" name="submit">
@@ -129,7 +135,7 @@
      </div>
      
      </div>
-
+	
   <script type="text/javascript" src="JS/index.js"></script>
   <script type="text/javascript" src="JS/validation.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

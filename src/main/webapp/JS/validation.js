@@ -31,6 +31,7 @@ function login()
 		let suNamesu = document.register.lname;
 	    let emailsu = document.register.email;
 		let passSu = document.register.pword;
+		let confirmSu = document.register.confirm;
 	  
 		if (emrisu.value == "") {
 		  alert("Please enter your name!");
@@ -77,6 +78,10 @@ function login()
 		  alert("Password must contasin one lowercase letter, one digit and the first letter must be Uppercase!");
 		  return false;
 		}
+		if (passSu.value != confirmSu.value) {
+	    alert("Passwords do not match.");
+	    return false;
+  		}
 	  
 		return true;
 	  }

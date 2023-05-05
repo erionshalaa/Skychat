@@ -3,20 +3,27 @@ package CRUD_Users;
 
 
 public class User {
-	private String fname,lname,email,pword;
+	private String id,fname,lname,email,pword,access;
 
-	
-	
 	public User() {
 		super();
 	}
-
 	public User(String fname, String lname, String email, String pword) {
 		super();
 		this.fname = fname;
 		this.lname = lname;
 		this.email = email;
 		this.pword = pword;
+	}
+
+	public User(String id,String fname, String lname, String email, String pword,String access) {
+		super();
+		this.fname = fname;
+		this.lname = lname;
+		this.email = email;
+		this.pword = pword;
+		this.id = id;
+		this.access = access;
 	}
 
 	public String getFname() {
@@ -49,6 +56,22 @@ public class User {
 
 	public void setPword(String pword) {
 		this.pword = pword;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getAccess() {
+		return access;
+	}
+
+	public void setAccess(String access) {
+		this.access = access;
 	}
 	
 	

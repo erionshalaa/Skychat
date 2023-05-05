@@ -3,7 +3,11 @@ package CRUD_Contacts;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import CRUD_Users.User;
 
 
 public class contactsdb {
@@ -56,6 +60,30 @@ public class contactsdb {
 		return result;
 		
 		
+	}
+	
+	public ArrayList<ContactGS> selectallcontacts() {
+	    loadDriver(dbDriver);
+	    Connection conn = getConnection();
+	    ArrayList<ContactGS> contacts = new ArrayList<>();
+	    String sql = "SELECT * FROM contacts";
+	    PreparedStatement ps;
+	    try {
+	        ps = conn.prepareStatement(sql);
+	        ResultSet rs = ps.executeQuery();
+	        while (rs.next()) {
+	        	String name = rs.getString("name");
+	            String phone = rs.getString("phone");
+	            String email = rs.getString("email");
+	            String company = rs.getString("company");
+	            String message = rs.getString("message");
+	            ContactGS contact = new ContactGS(name,phone,email,company, message);
+	            contacts.add(contact);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return contacts;
 	}
 
 	

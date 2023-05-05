@@ -22,8 +22,15 @@
 		<h1 class="logo"><a href="index.jsp">Skychat</a></h1>
        	<ul class="main-nav">
             <li><a href="index.jsp">Homepage</a></li>
-       	  <li><a href="#about" class="scroll">Features</a></li>
-          <li><a href="#">Dashboard</a></li>
+       	  <li><a href="index.jsp">Features</a></li>
+       	  <% HttpSession loginsession = request.getSession();
+	         boolean userLogin = loginsession != null && loginsession.getAttribute("userLogin") != null && (boolean) loginsession.getAttribute("userLogin"); 
+	         if(userLogin){%>
+          <li><a href="dashboard.jsp">Dashboard</a></li>
+          <% }else{%>
+          
+          <li><a href="login.jsp">Dashboard</a></li>
+          <%} %>
           <li><a href="#" >About</a></li>
           <li><a href="contact.jsp">Contact</a></li>
       	</ul>
@@ -31,8 +38,7 @@
       
 		<%
 		    // Check if the user is logged in
-		     HttpSession loginsession = request.getSession(false);
-	         boolean userLogin = loginsession != null && loginsession.getAttribute("userLogin") != null && (boolean) loginsession.getAttribute("userLogin");
+		    
 	         if(userLogin) {
 	        	 
 		    %>
@@ -43,9 +49,17 @@
 			      <a class="button">My Account</a>
 			    </summary>
 			    <ul> 
-			      <li><a href="#">Dashboard</a></li>
-			      <li><a href="#">My Account</a></li>
-			      <li><a href="logout.jsp">Log Out</a></li>
+			    <% HttpSession accesssession = request.getSession(false);
+		         boolean checkAccess = accesssession != null && accesssession.getAttribute("checkAccess") != null && (boolean) accesssession.getAttribute("checkAccess");
+			    if(userLogin && checkAccess){%>
+				      <li><a href="#">My Account</a></li>
+				      <li><a href="logout.jsp">Log Out</a></li>
+			      <%}else{ %>
+				      <li><a href="admindashboard.jsp">Admin Dashboard</a></li>
+				      <li><a href="#">My Account</a></li>
+				      <li><a href="logout.jsp">Log Out</a></li>
+			      <%} %>
+			      
 			  </ul>
 			</details>
 
@@ -69,7 +83,7 @@
     
      
   <div class="login-form">
-    <form action="Login_Servlet" name="login" id="login-form" onsubmit="return login();" method="post">
+    <form action="Login_Servlet" name="login" onsubmit="return login();" method="post">
     	<div class="head">
     	<h1>Welcome Back</h1>
     	</div>
@@ -88,10 +102,10 @@
       
       
       <div class="v-text-field__slot">
-      <input placeholder="Email" id="input-33" type="email" name="loginemail">
+      <input placeholder="Email" id="input-33" type="email" name="loginemail" >
       </div>
       <div class="v-text-field__slot">
-      <input placeholder="Password" id="input-33" type="password" name="loginpassword">
+      <input placeholder="Password" id="input-33" type="password" name="loginpassword" >
       </div>
       <div class="forgot-password">
       <a href="#" id="a-forgot">Forgot Password</a>

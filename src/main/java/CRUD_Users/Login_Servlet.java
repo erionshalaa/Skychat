@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -47,22 +48,24 @@ public class Login_Servlet extends HttpServlet {
 		registerdb rgdb = new registerdb();
 		
 		
-		
 			if(rgdb.validate(user)){
 					HttpSession loginsession = request.getSession();
 				    loginsession.setAttribute("userLogin", true);
-				    response.sendRedirect("login.jsp");
+				    
+				    HttpSession accesssession = request.getSession(true);
+				    if(rgdb.checkAccess(user)) {
+				    	accesssession.setAttribute("checkAccess", true);
+				    }else {
+				    	accesssession.setAttribute("checkAccess", false);
+				    }
 				
+				    response.sendRedirect("login.jsp");
 		    } else {
 		        // Forward request to the login page with an error message
 		        request.setAttribute("error", "Incorrect email or password");
 		        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
 		        dispatcher.forward(request, response);
 		    }
-		
-		
-	
-		
 		
 	}
 

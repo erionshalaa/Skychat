@@ -1,4 +1,4 @@
-package CRUD_Contacts;
+package AdminDashServlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,21 +10,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import CRUD_Contacts.ContactGS;
+import CRUD_Contacts.contactsdb;
 import CRUD_Users.User;
 import CRUD_Users.registerdb;
 
-
 /**
- * Servlet implementation class contacts
+ * Servlet implementation class admindashboard
  */
-@WebServlet("/contact")
-public class contact extends HttpServlet {
+@WebServlet("/admindashboard")
+public class admindashboard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public contact() {
+    public admindashboard() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,29 +34,25 @@ public class contact extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+		registerdb userDAO = new registerdb();
+	    ArrayList<User> users = userDAO.selectallusers();
+	    contactsdb userDAO1 = new contactsdb();
+	    ArrayList<ContactGS> contacts = userDAO1.selectallcontacts();
 	    
+	    HttpSession session1 = request.getSession();
+	    HttpSession session = request.getSession();
+	    session1.setAttribute("userList", users);
+	    session.setAttribute("contactList", contacts);
+	    response.sendRedirect("admindashboard.jsp");
+		
 	}
 
-	
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String fullname = request.getParameter("fullname");
-		String phonec = request.getParameter("phonec");
-		String emailc = request.getParameter("emailc");
-		String companyc = request.getParameter("companyc");
-		String messagec = request.getParameter("messagec");
-		
-		
-		
-		ContactGS	contact = new ContactGS(fullname,phonec,emailc,companyc,messagec);
-		contactsdb cdb = new contactsdb();
-		String result = cdb.insert(contact);
-		response.getWriter().print(result);
-		
-		HttpSession session = request.getSession();
-	    session.setAttribute("messageSent", true);
-	    response.sendRedirect("contact.jsp");
-		
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }
