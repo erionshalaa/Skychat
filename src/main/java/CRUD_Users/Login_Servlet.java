@@ -1,57 +1,50 @@
 package CRUD_Users;
 
 import java.io.IOException;
+import java.util.Base64;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * Servlet implementation class Login_Servlet
- */
+
 @WebServlet("/Login_Servlet")
 public class Login_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public Login_Servlet() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String loginemail = request.getParameter("loginemail");
 		String loginpassword = request.getParameter("loginpassword");
 		
-		User user = new User();
-		user.setEmail(loginemail);
-		user.setPword(loginpassword);
+		registerdb rgdb1 = new registerdb();
+		User user = rgdb1.getUserByEmail(loginemail);
 		
-		registerdb rgdb = new registerdb();
-		
-		
-			if(rgdb.validate(user)){
+		if(user != null) {
+			String saltString = user.getSalt();
+		if(saltString !=null) {
+			String hashedPassword = user.getPword();
+		    byte[] salt = Base64.getDecoder().decode(saltString);
+		    String hashedEnteredPassword = PasswordUtils.hashPassword(loginpassword, salt);
+		    
+
+			if(hashedEnteredPassword.trim().equals(hashedPassword.trim())){
 					HttpSession loginsession = request.getSession();
 				    loginsession.setAttribute("userLogin", true);
-				    
+				    registerdb rgdb = new registerdb();
 				    HttpSession accesssession = request.getSession(true);
 				    if(rgdb.checkAccess(user)) {
 				    	accesssession.setAttribute("checkAccess", true);
@@ -66,9 +59,9 @@ public class Login_Servlet extends HttpServlet {
 		        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
 		        dispatcher.forward(request, response);
 		    }
-		
+		}
 	}
-
+	}
 
 
 }

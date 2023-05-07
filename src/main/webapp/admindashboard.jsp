@@ -43,7 +43,7 @@
       	
             <%
             @SuppressWarnings("unchecked")
-			ArrayList<User> userList = (ArrayList<User>)session.getAttribute("userList");
+			ArrayList<User> userList = (ArrayList<User>)request.getAttribute("userList");
            
 			%>
 			
@@ -54,7 +54,6 @@
 			      <th>First Name</th>
 			      <th>Last Name</th>
 			      <th>Email</th>
-			      <th>Password</th>
 			      <th>Access</th>
 			    </tr>
 			  </thead>
@@ -67,10 +66,9 @@
 			      <td><%= user.getFname() %></td>
 			      <td><%= user.getLname() %></td>
 			      <td><%= user.getEmail() %></td>
-			      <td><%= user.getPword() %></td>
 			       <td><%= user.getAccess() %></td>
-			      <td><a  href="#" class="badge badge-success">Change role to Admin</a>
-                  <a href="#" class="badge badge-success">Change role to User</a> 
+			      <td><a  href="admindashboard?userId=<%= user.getId() %>&action=changetoadmin" class="badge badge-success">Change role to Admin</a>
+                  <a href="admindashboard?userId=<%= user.getId() %>&action=changetouser" class="badge badge-success">Change role to User</a> 
                   </td>
 			    </tr>
 			    <% }
@@ -92,12 +90,13 @@
       <div class="row">
        		<%
             @SuppressWarnings("unchecked")
-			ArrayList<ContactGS> contactList = (ArrayList<ContactGS>)session.getAttribute("contactList");
+			ArrayList<ContactGS> contactList = (ArrayList<ContactGS>)request.getAttribute("contactList");
            
 			%>
           <table class="table table-hover">
     <thead>
               <tr>
+              <th>Id</th>
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Email</th>
@@ -110,13 +109,14 @@
     			 if(contactList != null){
     			 for(ContactGS contact : contactList) { %>
 			    <tr>
+			    <td><%= contact.getContact_id() %></td>
 			     <td><%= contact.getName() %></td>
 			      <td><%= contact.getPhone() %></td>
 			      <td><%= contact.getEmail() %></td>
 			      <td><%= contact.getCompany() %></td>
 			      <td><%= contact.getMessage() %></td>
 			      <td>
-			      <a href="#" class="badge badge-danger">Delete</a>
+			      <a href="admindashboard?contactId=<%= contact.getContact_id() %>&action=deletecontact" class="badge badge-danger">Delete</a>
                   </td>
 			    </tr>
 			    

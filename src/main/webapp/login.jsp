@@ -35,7 +35,6 @@
           <li><a href="contact.jsp">Contact</a></li>
       	</ul>
       	
-      
 		<%
 		    // Check if the user is logged in
 		    

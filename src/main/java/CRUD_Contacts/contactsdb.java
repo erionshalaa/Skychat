@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import CRUD_Users.User;
 
 
 public class contactsdb {
@@ -72,18 +71,33 @@ public class contactsdb {
 	        ps = conn.prepareStatement(sql);
 	        ResultSet rs = ps.executeQuery();
 	        while (rs.next()) {
+	        	String contact_id = rs.getString("contact_id");
 	        	String name = rs.getString("name");
 	            String phone = rs.getString("phone");
 	            String email = rs.getString("email");
 	            String company = rs.getString("company");
 	            String message = rs.getString("message");
-	            ContactGS contact = new ContactGS(name,phone,email,company, message);
+	            ContactGS contact = new ContactGS(contact_id,name,phone,email,company,message);
 	            contacts.add(contact);
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 	    return contacts;
+	}
+	public void deleteContact(int contactId) {
+		loadDriver(dbDriver);
+		 Connection conn = getConnection();
+		 String sql = "DELETE FROM contacts where contact_id=?";
+		 PreparedStatement ps;
+		 try {
+			 ps = conn.prepareStatement(sql);
+			 ps.setInt(1, contactId);
+		     ps.executeUpdate();
+		 }
+		 catch(SQLException e ) {
+			 e.printStackTrace();
+		 }
 	}
 
 	

@@ -3,17 +3,19 @@ package CRUD_Users;
 
 
 public class User {
-	private String id,fname,lname,email,pword,access;
+	private String id,fname,lname,email,pword,access,salt;
+
 
 	public User() {
 		super();
 	}
-	public User(String fname, String lname, String email, String pword) {
+	public User(String fname, String lname, String email, String pword,String salt) {
 		super();
 		this.fname = fname;
 		this.lname = lname;
 		this.email = email;
 		this.pword = pword;
+		this.salt = salt;
 	}
 
 	public User(String id,String fname, String lname, String email, String pword,String access) {
@@ -72,6 +74,12 @@ public class User {
 
 	public void setAccess(String access) {
 		this.access = access;
+	}
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 	
 	

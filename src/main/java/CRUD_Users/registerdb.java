@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletRequest;
-
 
 
 public class registerdb {
@@ -43,7 +41,7 @@ public class registerdb {
 		loadDriver(dbDriver);
 		Connection conn = getConnection();
 		String result = "";
-		String sql = "INSERT INTO users(name,surname,email,password) VALUES(?,?,?,?)";
+		String sql = "INSERT INTO users(name,surname,email,password,salt) VALUES(?,?,?,?,?)";
 		PreparedStatement ps;
 		try {
 			ps = conn.prepareStatement(sql);
@@ -51,6 +49,7 @@ public class registerdb {
 			ps.setString(2, user.getPword());
 			ps.setString(3, user.getFname());
 			ps.setString(4, user.getLname());
+			ps.setString(5, user.getSalt());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -62,6 +61,33 @@ public class registerdb {
 		
 	}
 	
+	
+	public User getUserByEmail(String email) {
+		loadDriver(dbDriver);
+		Connection conn = getConnection();
+	    PreparedStatement stmt;
+	    ResultSet rs = null;
+	    User user = null;
+	    String query = "SELECT * FROM users WHERE email = ?";
+	    try {
+	        
+	        stmt = conn.prepareStatement(query);
+	        stmt.setString(1, email);
+	        rs = stmt.executeQuery();
+	        if (rs.next()) {
+	            user = new User();
+	            user.setFname(rs.getString("name"));
+	            user.setLname(rs.getString("surname"));
+	            user.setEmail(rs.getString("email"));
+	            user.setPword(rs.getString("password"));
+	            user.setSalt(rs.getString("salt"));
+	         
+	        }
+	    } catch (SQLException e) {
+	    } 
+	    return user;
+	}
+
 	
 
 	public boolean validate(User user) {
@@ -127,9 +153,9 @@ public class registerdb {
 	        while (rs.next()) {
 	        	String id = rs.getString("userid");
 	            String email = rs.getString("email");
-	            String pword = rs.getString("password");
 	            String fname = rs.getString("name");
 	            String lname = rs.getString("surname");
+	            String pword = rs.getString("password");
 	            String access = rs.getString("access");
 	            User user = new User(id,fname,lname,email,pword,access);
 	            users.add(user);
@@ -138,6 +164,34 @@ public class registerdb {
 	        e.printStackTrace();
 	    }
 	    return users;
+	}
+	public void changeAccessToAdmin(int userId) {
+		 loadDriver(dbDriver);
+		 Connection conn = getConnection();
+		 String sql = "UPDATE users SET access='admin' where userid=?";
+		 PreparedStatement ps;
+		 try {
+			 ps = conn.prepareStatement(sql);
+			 ps.setInt(1, userId);
+		     ps.executeUpdate();
+		 }
+		 catch(SQLException e ) {
+			 e.printStackTrace();
+		 }
+	}
+	public void changeAccessToUser(int userId) {
+		 loadDriver(dbDriver);
+		 Connection conn = getConnection();
+		 String sql = "UPDATE users SET access='user' where userid=?";
+		 PreparedStatement ps;
+		 try {
+			 ps = conn.prepareStatement(sql);
+			 ps.setInt(1, userId);
+		     ps.executeUpdate();
+		 }
+		 catch(SQLException e ) {
+			 e.printStackTrace();
+		 }
 	}
 	
 }
