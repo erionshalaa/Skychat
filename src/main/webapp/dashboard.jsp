@@ -1,5 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" >
+<%@ page import="java.util.List" %>
+<%@  page import="CRUD_Users.User" %>
+<%@  page import="CRUD_Users.registerdb" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="Dashboard_Messages.Friends" %>
+
+
+    
+<%
+		String query = request.getParameter("query");
+		registerdb rgdb = new registerdb();
+		List<User> allUsers = rgdb.selectallusers();
+		List<User> matchingUsers = new ArrayList<>();
+		
+		if (query != null) {
+		    User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
+		   
+		    for (User user : allUsers) {
+		    	if (!user.getId().equals(loggedInUser.getId())) {
+		            String fname = user.getFname();
+		            if (fname != null && fname.contains(query)) {
+		                matchingUsers.add(user);
+		            }
+		        }
+		    }
+		}
+%>
 <head>
   <meta charset="UTF-8">
   <title>Skychat</title>
@@ -9,28 +36,33 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="website icon" type="png" href="Pictures/applogo.png">
   <link rel="stylesheet" type="text/css" href="CSS/dashboard.css">
+ 	
+  </head>
 <body>
+
 <div class="loader_bg">
  	<div class="loader"></div>
  	</div>
- 	
- 	
  	
  	<div class="header">
   		<img class="logoicon" src="Pictures/applogo.png" >
 		<h1 class="logo"><a href="index.jsp">Skychat</a></h1>
        	<ul class="main-nav">
-       	  <li><a href="index.jsp">Homepage</a></li>
+            <li><a href="index.jsp">Homepage</a></li>
        	  <li><a href="index.jsp">Features</a></li>
-          <li><a href="dashboard.jsp">Dashboard</a></li>
+       	  <% HttpSession loginsession = request.getSession();
+	         boolean userLogin = loginsession != null && loginsession.getAttribute("userLogin") != null && (boolean) loginsession.getAttribute("userLogin"); 
+	         if(userLogin){%>
+          <li><a href="dashboard_servlet">Dashboard</a></li>
+          <% }else{response.sendRedirect("login.jsp");}%>
+          
           <li><a href="#" >About</a></li>
           <li><a href="contact.jsp">Contact</a></li>
-          
       	</ul>
-      	<%
+      	
+		<%
 		    // Check if the user is logged in
-		     HttpSession loginsession = request.getSession(false);
-	         boolean userLogin = loginsession != null && loginsession.getAttribute("userLogin") != null && (boolean) loginsession.getAttribute("userLogin");
+		    
 	         if(userLogin) {
 	        	 
 		    %>
@@ -41,9 +73,17 @@
 			      <a class="button">My Account</a>
 			    </summary>
 			    <ul> 
-			      <li><a href="#">Dashboard</a></li>
-			      <li><a href="#">My Account</a></li>
-			      <li><a href="logout.jsp">Log Out</a></li>
+			    <% HttpSession accesssession = request.getSession(false);
+		         boolean checkAccess = accesssession != null && accesssession.getAttribute("checkAccess") != null && (boolean) accesssession.getAttribute("checkAccess");
+			    if(userLogin && checkAccess){%>
+				      <li><a href="#">My Account</a></li>
+				      <li><a href="logout.jsp">Log Out</a></li>
+			      <%}else{ %>
+				      <li><a href="admindashboard">Admin Dashboard</a></li>
+				      <li><a href="#">My Account</a></li>
+				      <li><a href="logout.jsp">Log Out</a></li>
+			      <%} %>
+			      
 			  </ul>
 			</details>
 
@@ -60,95 +100,62 @@
 		    <a href="login.jsp"><button class="login">Log in</button></a>
       		<a href="register.jsp"><button class="signup">Sign up</button></a>
 		<%  } %>
+		
      </div>
-  	
- 
-
-
-
-
 
 <div id="container">
 	<aside>
 		<header>
-			<input type="text" placeholder="Search for friends">
+		<div class="search-container"></div>
+			<form action="dashboard.jsp" method="GET">
+			<input type="text" name="query" id="search-input" placeholder="Search for friends">
+			</form>
+			
 		</header>
 		<ul>
+			<%
+			// Retrieve the search query parameter (friend ID)
+			String friendId = request.getParameter("friendId");
+			registerdb friendDAO = new registerdb();
+			User loggedInUserId = (User) request.getSession().getAttribute("loggedInUser");
+			
+			if(matchingUsers != null){
+				for (User user : matchingUsers) {
+					int logged = Integer.parseInt(loggedInUserId.getId());
+					int userid = Integer.parseInt(user.getId());
+					boolean isFriend = friendDAO.isFriendAdded(logged, userid);%>
 			<li>
-				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
+				<img src="Pictures/profile-icon.png" alt="">
 				<div>
-					<h2>Vincent Porter</h2>
-					
+					<h2><%= user.getFname() %> <%= user.getLname() %></h2>
+					<%if(!isFriend){ %>
+					<a class="addfriend" href="dashboard_servlet?userId=<%= user.getId() %>&action=addfriend" >Add Friend</a>
+					<%} %>
 				</div>
 			</li>
-			<li>
-				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_02.jpg" alt="">
-				<div>
-					<h2>User</h2>
-					
-				</div>
-			</li>
-			<li>
-				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_03.jpg" alt="">
-				<div>
-					<h2>Prénom Nom</h2>
-					
-				</div>
-			</li>
-			<li>
-				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_04.jpg" alt="">
-				<div>
-					<h2>Prénom Nom</h2>
-					
-				</div>
-			</li>
-			<li>
-				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_05.jpg" alt="">
-				<div>
-					<h2>Prénom Nom</h2>
-					
-				</div>
-			</li>
-			<li>
-				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_06.jpg" alt="">
-				<div>
-					<h2>Prénom Nom</h2>
-					
-				</div>
-			</li>
-			<li>
-				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_07.jpg" alt="">
-				<div>
-					<h2>Prénom Nom</h2>
-					
-				</div>
-			</li>
-			<li>
-				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_08.jpg" alt="">
-				<div>
-					<h2>Prénom Nom</h2>
-					
-				</div>
-			</li>
-			<li>
-				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_09.jpg" alt="">
-				<div>
-					<h2>Prénom Nom</h2>
-					
-				</div>
-			</li>
-			<li>
-				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_10.jpg" alt="">
-				<div>
-					<h2>Prénom Nom</h2>
-					
-				</div>
-			</li>
+			<%}} %>
+			
+			
+		    <% @SuppressWarnings("unchecked")
+		    ArrayList<String> friendNames = (ArrayList<String>) request.getAttribute("friendNames"); %>
+		    <% if (friendNames != null) {
+		        for (String friend : friendNames) {
+		    %>
+		    <li>
+		        <img src="Pictures/profile-icon.png" >
+		        <div>
+		            <h2><%= friend %></h2>
+		        </div>
+		    </li>
+		    <% }
+		    } %>
+			
+			
 		</ul>
 	</aside>
 	<main>
 		<header>
-			<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
+			<img src="Pictures/profile-icon.png" alt="">
 			<div>
 				<h2>Chat with Vincent Porter</h2>
 				
@@ -246,5 +253,6 @@
         });
     })(jQuery);
 </script>
+
 </body>
 </html>

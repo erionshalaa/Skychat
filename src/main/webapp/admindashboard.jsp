@@ -22,6 +22,18 @@
  	<%
   HttpSession session2 = request.getSession();
 %>
+
+	 <% HttpSession loginsession = request.getSession();
+ 		HttpSession accesssession = request.getSession(false);
+	         boolean userLogin = loginsession != null && loginsession.getAttribute("userLogin") != null && (boolean) loginsession.getAttribute("userLogin");
+	         boolean checkAccess = accesssession != null && accesssession.getAttribute("checkAccess") != null && (boolean) accesssession.getAttribute("checkAccess"); 
+	         if(userLogin){
+          		if(userLogin && checkAccess){
+          			response.sendRedirect("index.jsp");
+          			}
+          		
+	         }else{response.sendRedirect("index.jsp");}
+          %>
 	<div class="loader_bg">
  	<div class="loader"></div>
  	</div>

@@ -6,7 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+import Dashboard_Messages.Friends;
+import java.util.List;
 
 
 public class registerdb {
@@ -76,6 +77,32 @@ public class registerdb {
 	        rs = stmt.executeQuery();
 	        if (rs.next()) {
 	            user = new User();
+	            user.setFname(rs.getString("name"));
+	            user.setLname(rs.getString("surname"));
+	            user.setEmail(rs.getString("email"));
+	            user.setPword(rs.getString("password"));
+	            user.setSalt(rs.getString("salt"));
+	         
+	        }
+	    } catch (SQLException e) {
+	    } 
+	    return user;
+	}
+	public User getUserByEmail1(String email) {
+		loadDriver(dbDriver);
+		Connection conn = getConnection();
+	    PreparedStatement stmt;
+	    ResultSet rs = null;
+	    User user = null;
+	    String query = "SELECT * FROM users WHERE email = ?";
+	    try {
+	        
+	        stmt = conn.prepareStatement(query);
+	        stmt.setString(1, email);
+	        rs = stmt.executeQuery();
+	        if (rs.next()) {
+	            user = new User();
+	            user.setId(rs.getString("userid"));
 	            user.setFname(rs.getString("name"));
 	            user.setLname(rs.getString("surname"));
 	            user.setEmail(rs.getString("email"));
@@ -193,5 +220,77 @@ public class registerdb {
 			 e.printStackTrace();
 		 }
 	}
-	
+	public void addfriend(int user1Id, int user2Id) {
+	    loadDriver(dbDriver);
+	    Connection conn = getConnection();
+	    String sql = "INSERT INTO friends (user_id_1, user_id_2) VALUES (?, ?)";
+	    PreparedStatement ps = null;
+	    
+	    try {
+	        ps = conn.prepareStatement(sql);
+	        ps.setInt(1, user1Id);
+	        ps.setInt(2, user2Id);
+	        ps.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	public List<String> getFriends(int yourId) throws SQLException {
+	    List<String> friends = new ArrayList<>();
+
+	    // SQL query to retrieve friend data from the friendship table, excluding your ID
+	    String sqlQuery = "SELECT u.name, u.surname FROM friends f " +
+	                      "JOIN users u ON f.user_id_1 = u.userid OR f.user_id_2 = u.userid " +
+	                      "WHERE (f.user_id_1 = ? OR f.user_id_2 = ?) " +
+	                      "AND u.userid != ?";
+
+	    Connection conn = getConnection();
+	    try (PreparedStatement statement = conn.prepareStatement(sqlQuery)) {
+	        // Set the parameter values to exclude your ID
+	        statement.setInt(1, yourId);
+	        statement.setInt(2, yourId);
+	        statement.setInt(3, yourId);
+
+	        try (ResultSet resultSet = statement.executeQuery()) {
+	            while (resultSet.next()) {
+	                String name = resultSet.getString("name");
+	                String surname = resultSet.getString("surname");
+	                String fullName = name + " " + surname;
+	                // Create a Friends object and add it to the list
+	                friends.add(fullName);
+	            }
+	        }
+	    }
+
+	    return friends;
+	}
+	public boolean isFriendAdded(int loggedInUserId, int friendId) {
+	    // Connect to the database
+	    Connection conn = getConnection(); 
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        // Prepare and execute the SQL query to check if the user is already a friend
+	        String sql = "SELECT COUNT(*) FROM friends WHERE (user_id_1 = ? AND user_id_2 = ?) OR (user_id_1 = ? AND user_id_2 = ?)";
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setInt(1, loggedInUserId);
+	        stmt.setInt(2, friendId);
+	        stmt.setInt(3, friendId);
+	        stmt.setInt(4, loggedInUserId);
+	        rs = stmt.executeQuery();
+
+	        // Check if the query returned any rows
+	        if (rs.next()) {
+	            int count = rs.getInt(1);
+	            return count > 0;
+	        }
+
+	        return false;
+	    } catch (SQLException e) {
+	        // Handle any exceptions
+	        e.printStackTrace();
+	        return false;
+	    } 
+	}
 }

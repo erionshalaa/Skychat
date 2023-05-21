@@ -31,7 +31,9 @@ public class Login_Servlet extends HttpServlet {
 		String loginpassword = request.getParameter("loginpassword");
 		
 		registerdb rgdb1 = new registerdb();
+		registerdb rgdb2 = new registerdb();
 		User user = rgdb1.getUserByEmail(loginemail);
+		User user1 = rgdb2.getUserByEmail1(loginemail);
 		
 		if(user != null) {
 			String saltString = user.getSalt();
@@ -44,6 +46,7 @@ public class Login_Servlet extends HttpServlet {
 			if(hashedEnteredPassword.trim().equals(hashedPassword.trim())){
 					HttpSession loginsession = request.getSession();
 				    loginsession.setAttribute("userLogin", true);
+				    request.getSession().setAttribute("loggedInUser", user1);
 				    registerdb rgdb = new registerdb();
 				    HttpSession accesssession = request.getSession(true);
 				    if(rgdb.checkAccess(user)) {
@@ -51,8 +54,9 @@ public class Login_Servlet extends HttpServlet {
 				    }else {
 				    	accesssession.setAttribute("checkAccess", false);
 				    }
-				
-				    response.sendRedirect("login.jsp");
+				    
+				    response.sendRedirect("dashboard_servlet");
+				    return;
 		    } else {
 		        // Forward request to the login page with an error message
 		        request.setAttribute("error", "Incorrect email or password");

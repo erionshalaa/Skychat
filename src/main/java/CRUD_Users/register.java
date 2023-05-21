@@ -43,6 +43,7 @@ public class register extends HttpServlet {
 		User user = new User(email,pword,fname,lname,salt);
 		registerdb rdb = new registerdb();
 		String result = rdb.insert(user);
+	
 		response.getWriter().print(result);
 		
 		HttpSession session = request.getSession();

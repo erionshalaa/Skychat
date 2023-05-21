@@ -26,7 +26,7 @@
        	  <% HttpSession loginsession = request.getSession();
 	         boolean userLogin = loginsession != null && loginsession.getAttribute("userLogin") != null && (boolean) loginsession.getAttribute("userLogin"); 
 	         if(userLogin){%>
-          <li><a href="dashboard.jsp">Dashboard</a></li>
+          <li><a href="dashboard_servlet">Dashboard</a></li>
           <% }else{%>
           
           <li><a href="login.jsp">Dashboard</a></li>
@@ -54,7 +54,7 @@
 				      <li><a href="#">My Account</a></li>
 				      <li><a href="logout.jsp">Log Out</a></li>
 			      <%}else{ %>
-				      <li><a href="admindashboard.jsp">Admin Dashboard</a></li>
+				      <li><a href="admindashboard">Admin Dashboard</a></li>
 				      <li><a href="#">My Account</a></li>
 				      <li><a href="logout.jsp">Log Out</a></li>
 			      <%} %>

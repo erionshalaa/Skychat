@@ -24,12 +24,12 @@
   		<img class="logoicon" src="Pictures/applogo.png" >
 		<h1 class="logo"><a href="index.jsp">Skychat</a></h1>
        	<ul class="main-nav">
-           <li><a href="index.jsp">Homepage</a></li>
+            <li><a href="index.jsp">Homepage</a></li>
        	  <li><a href="index.jsp">Features</a></li>
-           <% HttpSession loginsession = request.getSession(false);
+       	  <% HttpSession loginsession = request.getSession();
 	         boolean userLogin = loginsession != null && loginsession.getAttribute("userLogin") != null && (boolean) loginsession.getAttribute("userLogin"); 
 	         if(userLogin){%>
-          <li><a href="dashboard.jsp">Dashboard</a></li>
+          <li><a href="dashboard_servlet">Dashboard</a></li>
           <% }else{%>
           
           <li><a href="login.jsp">Dashboard</a></li>
@@ -37,9 +37,10 @@
           <li><a href="#" >About</a></li>
           <li><a href="contact.jsp">Contact</a></li>
       	</ul>
-      	<%
+      	
+		<%
 		    // Check if the user is logged in
-		     
+		    
 	         if(userLogin) {
 	        	 
 		    %>
@@ -50,9 +51,17 @@
 			      <a class="button">My Account</a>
 			    </summary>
 			    <ul> 
-			      <li><a href="#">Dashboard</a></li>
-			      <li><a href="#">My Account</a></li>
-			      <li><a href="logout.jsp">Log Out</a></li>
+			    <% HttpSession accesssession = request.getSession(false);
+		         boolean checkAccess = accesssession != null && accesssession.getAttribute("checkAccess") != null && (boolean) accesssession.getAttribute("checkAccess");
+			    if(userLogin && checkAccess){%>
+				      <li><a href="#">My Account</a></li>
+				      <li><a href="logout.jsp">Log Out</a></li>
+			      <%}else{ %>
+				      <li><a href="admindashboard">Admin Dashboard</a></li>
+				      <li><a href="#">My Account</a></li>
+				      <li><a href="logout.jsp">Log Out</a></li>
+			      <%} %>
+			      
 			  </ul>
 			</details>
 
@@ -69,6 +78,7 @@
 		    <a href="login.jsp"><button class="login">Log in</button></a>
       		<a href="register.jsp"><button class="signup">Sign up</button></a>
 		<%  } %>
+		
      </div>
      <div class="container">
      <div class="box">

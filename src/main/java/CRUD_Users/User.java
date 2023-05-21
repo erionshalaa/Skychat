@@ -81,7 +81,9 @@ public class User {
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
-	
+	 public String toString() {
+	        return "User [id=" + id + ", name=" + fname + ", surname=" + lname +", email=" + email + "]";
+	    }
 	
 }
 

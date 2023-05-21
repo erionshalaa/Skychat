@@ -63,10 +63,13 @@ aside li{
 	padding:10px 0;
 	cursor:pointer;
 	transition:0.6s;
+	background-color:#EAEAEA;
+	border: 1px solid #CCCCCC;
 }
 aside li:hover{
-	opacity:0.5;
+	opacity:0.8;
 }
+
 h2,h3{
 	margin:0;
 }
@@ -74,6 +77,7 @@ aside li img{
 	border-radius:50%;
 	margin-left:20px;
 	margin-right:8px;
+	margin-top:5px;
 }
 aside li div{
 	display:inline-block;
@@ -84,6 +88,8 @@ aside li h2{
 	font-size:14px;
 	color:black;
 	font-weight:normal;
+	margin-top:6px;
+	display:inline-block;
 	
 }
 
@@ -221,3 +227,17 @@ main footer a{
 	margin-top:5px;
 	display:inline-block;
 }
+aside ul img,header img {
+	width:50px;
+	height:50px;
+}
+.addfriend{
+	display: inline-block;
+  padding: 3px 6px;
+  background-color: #3598db;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-left:90px;
+}
+
