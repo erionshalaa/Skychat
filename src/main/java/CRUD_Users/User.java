@@ -18,6 +18,13 @@ public class User {
 		this.salt = salt;
 	}
 
+	public User(String id,String email,String fname, String lname) {
+		super();
+		this.id = id;
+		this.fname = fname;
+		this.lname = lname;
+		this.email = email;
+	}
 	public User(String id,String fname, String lname, String email, String pword,String access) {
 		super();
 		this.fname = fname;

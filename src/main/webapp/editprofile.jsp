@@ -1,4 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@  page import="CRUD_Users.User" %>
+<%@  page import="CRUD_Users.registerdb" %>
+<%@ page import="java.util.ArrayList" %>
+
 
 <!DOCTYPE html>
 <html>
@@ -10,6 +15,7 @@
 <link rel="stylesheet" type="text/css" href="CSS/loader.css">
 <link rel="stylesheet" type="text/css" href="CSS/signup.css">
 <link rel="stylesheet" type="text/css" href="CSS/button.css">
+<link rel="stylesheet" type="text/css" href="CSS/editprofile.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="website icon" type="png" href="Pictures/applogo.png">
 </head>
@@ -23,7 +29,7 @@
  	<div class="header">
   		<img class="logoicon" src="Pictures/applogo.png" >
 		<h1 class="logo"><a href="index.jsp">Skychat</a></h1>
-       	<ul class="main-nav">
+    	<ul class="main-nav">
             <li><a href="index.jsp">Homepage</a></li>
        	  <li><a href="index.jsp">Features</a></li>
        	  <% HttpSession loginsession = request.getSession();
@@ -82,68 +88,73 @@
      </div>
      <div class="container">
      <div class="box">
-     	
+    
+     
      <%
          HttpSession session1 = request.getSession(false);
-         boolean userInserted = session1 != null && session1.getAttribute("userInserted") != null && (boolean) session1.getAttribute("userInserted");
-         if(userInserted) {
+         boolean userUpdated = session1 != null && session1.getAttribute("userUpdated") != null && (boolean) session1.getAttribute("userUpdated");
+         if(userUpdated) {
      %>
      	<script>
-        	alert("Jeni regjistruar me sukses!");
+        	alert("Keni ndryshuar te dhenat me sukses!");
         </script>
      <%
-         session1.removeAttribute("userInserted");
+         session1.removeAttribute("userUpdated");
       }
      %>
-     
-     
    
   <div class="login-form">
-    <form action="register" name="register"  onsubmit="return signup();" method="post">
+    <form action="editprofile" name="editprofile"  onsubmit="return signup();" method="post">
     	<div class="head">
-    	<h1>Create New Account</h1>
+    	<h1>Edit You Profile</h1>
     	</div>
-    	<div class="app-icons">
-	<button type="button" disabled class="loginBtn loginBtn--facebook">
- 	 Register with Facebook
-	</button>
-
-		<button type="button" disabled class="loginBtn loginBtn--google">
-  	Register with Google
-		</button>  	
-    	</div>
-    	<div  class="separator"><p >
-        Or register with email
-      </p></div>
-      
-      
+    	
+    	<% 
+		
+		registerdb rgdb = new registerdb();
+		List<User> allUsers = rgdb.selectallusers();
+			String fname = "";
+			String lname = "";
+			String email = "";
+			String access = "";
+			String userid= "";
+	
+		    User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
+		   
+		    for (User user : allUsers) {
+		    	if (user.getId().equals(loggedInUser.getId())) {
+		    		userid = user.getId();
+		    		fname = user.getFname();
+					lname = user.getLname();
+					email = user.getEmail();
+					access = user.getAccess();
+					break;
+		           
+		        }
+		    }
+		%>
+    	<input style="display:none;" name="userid" value="<%= userid  %>">
+      <label id="label2">First Name</label>
+      <label id="label2-1">Last Name</label>
       <div class="names-input">
-      <input placeholder="First Name" id="input-33" type="text" name="fname">
-      <input placeholder="Last Name" id="input-33" type="text" name="lname">
+      <input id="input-33" type="text" name="fname" value="<%= fname %>">
+      <input  id="input-33" type="text" name="lname" value="<%= lname %>">
       </div>
       <div class="v-text-field__slot">
-      <input placeholder="Email" id="input-33" type="email" name="email">
+      <label id="label1">Email</label>
+      <input id="input-33" type="email" name="email" value="<%= email %>">
       </div>
-      <div class="pw-input">
-      <input placeholder="Password" id="input-33" type="password" name="pword">
-      <input placeholder="Confirm Password" id="input-33" type="password" name="confirm">
+      <div class="v-text-field__slot">
+      <label id="label1">Access</label>
+      <input  id="input-33" type="email" readonly  value="<%= access %>">
       </div>
+      
       
       <input type="submit" value="CONTINUE" name="submit">
     </form>
   </div>
-  <div class="photo">
-  <div class="login-header" >
-
-				<h1>Just register to join with us</h1>
-				<p>A platform with efficient integration of many features <br> and so much more </p>
-            </div>
-	
-	<img class="login-pic" src="Pictures/register.png">
-	</div>
-	
+ 
      </div>
-     
      </div>
 	
   <script type="text/javascript" src="JS/index.js"></script>

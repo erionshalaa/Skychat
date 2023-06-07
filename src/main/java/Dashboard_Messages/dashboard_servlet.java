@@ -40,7 +40,7 @@ public class dashboard_servlet extends HttpServlet {
 		
 		int logged = Integer.parseInt(loggedInUser.getId());
 		registerdb friendshipDAO = new registerdb();
-		List<String> friendNames = null;
+		List<Friends> friendNames = null;
 		try {
 			friendNames = friendshipDAO.getFriends(logged);
 		} catch (SQLException e) {

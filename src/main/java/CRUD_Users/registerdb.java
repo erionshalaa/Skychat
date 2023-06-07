@@ -235,11 +235,12 @@ public class registerdb {
 	        e.printStackTrace();
 	    }
 	}
-	public List<String> getFriends(int yourId) throws SQLException {
-	    List<String> friends = new ArrayList<>();
+	
+	public List<Friends> getFriends(int yourId) throws SQLException {
+	    List<Friends> friends = new ArrayList<>();
 
 	    // SQL query to retrieve friend data from the friendship table, excluding your ID
-	    String sqlQuery = "SELECT u.name, u.surname FROM friends f " +
+	    String sqlQuery = "SELECT u.userid, u.name, u.surname FROM friends f " +
 	                      "JOIN users u ON f.user_id_1 = u.userid OR f.user_id_2 = u.userid " +
 	                      "WHERE (f.user_id_1 = ? OR f.user_id_2 = ?) " +
 	                      "AND u.userid != ?";
@@ -253,17 +254,18 @@ public class registerdb {
 
 	        try (ResultSet resultSet = statement.executeQuery()) {
 	            while (resultSet.next()) {
+	                int friendId = resultSet.getInt("userid");
 	                String name = resultSet.getString("name");
 	                String surname = resultSet.getString("surname");
-	                String fullName = name + " " + surname;
-	                // Create a Friends object and add it to the list
-	                friends.add(fullName);
+	                Friends friend = new Friends(friendId, name, surname);
+	                friends.add(friend);
 	            }
 	        }
 	    }
 
 	    return friends;
 	}
+
 	public boolean isFriendAdded(int loggedInUserId, int friendId) {
 	    // Connect to the database
 	    Connection conn = getConnection(); 
@@ -293,4 +295,36 @@ public class registerdb {
 	        return false;
 	    } 
 	}
+	public String updateUser(User user) {
+	    loadDriver(dbDriver);
+	    Connection conn = getConnection();
+	    String result = "";
+	    String sql = "UPDATE users SET email = ?, name = ?, surname = ? WHERE userid = ?";
+	    PreparedStatement ps;
+
+	    try {
+	        ps = conn.prepareStatement(sql);
+	        
+	        ps.setString(1, user.getEmail());
+	        ps.setString(2, user.getFname());
+	        ps.setString(3, user.getLname());
+	        ps.setString(4, user.getId()); 
+	        int rowsAffected = ps.executeUpdate();
+
+	        if (rowsAffected > 0) {
+	            result = "Credentials updated successfully.";
+	        } else {
+	            result = "No user found with the given ID.";
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        result = "Error updating credentials.";
+	    } 
+	    return result;
+	}
+	
+
+	
+
+
 }

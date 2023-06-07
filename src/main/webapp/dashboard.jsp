@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" >
 <%@ page import="java.util.List" %>
@@ -37,6 +38,23 @@
 <link rel="website icon" type="png" href="Pictures/applogo.png">
   <link rel="stylesheet" type="text/css" href="CSS/dashboard.css">
  	
+	
+		
+ 	<script>
+  function openChatBox(friendName, friendId) {
+    var friendNameElement = document.getElementById('friendName');
+    var wsidElement = document.getElementById('wsid');
+    var connectButton = document.getElementById('connectbutton');
+    friendNameElement.textContent = "Chat with " + friendName;
+    wsidElement.textContent = friendId;
+
+    selectedFriendId = friendId;
+    connectbutton.style.display = selectedFriendId ? "inline-block" : "none";
+    
+    
+  
+  }
+</script>
   </head>
 <body>
 
@@ -76,11 +94,11 @@
 			    <% HttpSession accesssession = request.getSession(false);
 		         boolean checkAccess = accesssession != null && accesssession.getAttribute("checkAccess") != null && (boolean) accesssession.getAttribute("checkAccess");
 			    if(userLogin && checkAccess){%>
-				      <li><a href="#">My Account</a></li>
+				      <li><a href="editprofile.jsp">My Account</a></li>
 				      <li><a href="logout.jsp">Log Out</a></li>
 			      <%}else{ %>
 				      <li><a href="admindashboard">Admin Dashboard</a></li>
-				      <li><a href="#">My Account</a></li>
+				      <li><a href="editprofile.jsp">My Account</a></li>
 				      <li><a href="logout.jsp">Log Out</a></li>
 			      <%} %>
 			      
@@ -137,14 +155,15 @@
 			
 			
 		    <% @SuppressWarnings("unchecked")
-		    ArrayList<String> friendNames = (ArrayList<String>) request.getAttribute("friendNames"); %>
+		    ArrayList<Friends> friendNames = (ArrayList<Friends>) request.getAttribute("friendNames"); %>
+		    
 		    <% if (friendNames != null) {
-		        for (String friend : friendNames) {
+		        for (Friends friend : friendNames) {
 		    %>
-		    <li>
+		    <li class="user" onclick="openChatBox('<%= friend.getName() %>', '<%= friend.getId() %>')">
 		        <img src="Pictures/profile-icon.png" >
 		        <div>
-		            <h2><%= friend %></h2>
+		            <h2><%= friend.getName() + " " + friend.getSurname()%></h2>
 		        </div>
 		    </li>
 		    <% }
@@ -157,83 +176,46 @@
 		<header>
 			<img src="Pictures/profile-icon.png" alt="">
 			<div>
-				<h2>Chat with Vincent Porter</h2>
+				<h2><span id="friendName"></span></h2>
 				
 			</div>
 			
 		</header>
-		<ul id="chat">
-			<li class="you">
-				<div class="entete">
-					<span class="status green"></span>
-					<h2>Vincent</h2>
-					<h3>10:12AM, Today</h3>
-				</div>
-				<div class="triangle"></div>
-				<div class="message">
-					Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-				</div>
-			</li>
-			<li class="me">
-				<div class="entete">
-					<h3>10:12AM, Today</h3>
-					<h2>Vincent</h2>
-					<span class="status blue"></span>
-				</div>
-				<div class="triangle"></div>
-				<div class="message">
-					Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+		 <div id="chatArea">
+	    <% if (matchingUsers != null) {
+	      for (User user : matchingUsers) { %>
+	    <div id="chatBox-<%= user.getId() %>" 
+	     class="chat-box">
+	      
+	    </div> 
+	    
+	    <% }
+	    } %>
+	  	</div>
+	  	<ul id="chat" >
+	    <li>
+				
+				<div id="messageList" class="message">
 				</div>
 			</li>
-			<li class="me">
-				<div class="entete">
-					<h3>10:12AM, Today</h3>
-					<h2>Vincent</h2>
-					<span class="status blue"></span>
-				</div>
-				<div class="triangle"></div>
-				<div class="message">
-					OK
-				</div>
-			</li>
-			<li class="you">
-				<div class="entete">
-					<span class="status green"></span>
-					<h2>Vincent</h2>
-					<h3>10:12AM, Today</h3>
-				</div>
-				<div class="triangle"></div>
-				<div class="message">
-					Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-				</div>
-			</li>
-			<li class="me">
-				<div class="entete">
-					<h3>10:12AM, Today</h3>
-					<h2>Vincent</h2>
-					<span class="status blue"></span>
-				</div>
-				<div class="triangle"></div>
-				<div class="message">
-					Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-				</div>
-			</li>
-			<li class="me">
-				<div class="entete">
-					<h3>10:12AM, Today</h3>
-					<h2>Vincent</h2>
-					<span class="status blue"></span>
-				</div>
-				<div class="triangle"></div>
-				<div class="message">
-					OK
-				</div>
-			</li>
-		</ul>
-		<footer>
-			<textarea placeholder="Type your message"></textarea>
-			
-			<a href="#">Send</a>
+	    
+	    </ul>
+		<footer><% 
+		@SuppressWarnings("unchecked")
+		    ArrayList<Friends> friendNamess = (ArrayList<Friends>) request.getAttribute("friendNames"); %>
+		    
+		    <% if (friendNamess != null) {
+		        for (Friends friend : friendNamess) {
+		    %>
+			  <form id="messageForm" onsubmit="return sendMessage(event,<%= friend.getId() %>);">
+			  <% }
+		    } %>
+		        <textarea id="messageInput" placeholder="Type your message"></textarea>
+		        <span style="display: none;" id="wsid"></span>
+		        <button style="display: none;" id="connectbutton" onclick="connect(document.getElementById('wsid').textContent); return false;">Connect</button>
+		        
+		        <button id="send" type="submit">Send</button>
+    			</form>
 		</footer>
 	</main>
 </div>
@@ -252,6 +234,98 @@
             });
         });
     })(jQuery);
+</script>
+
+<%
+  User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
+  String currentUserId = (loggedInUser != null) ? loggedInUser.getId() : "";
+%>
+
+<script>
+  var socket; 
+  var currentUser = '<%= currentUserId %>';
+
+  function connect(friendId) {
+    var host = "ws://localhost:8080/lab1-chatapp/dashboard_servlet/" + friendId;
+    console.log("Connect function called for friend ID: " + friendId);
+
+    socket = new WebSocket(host); 
+
+    socket.onopen = function() {
+      console.log("WebSocket connection established for friend ID: " + friendId);
+    };
+
+    socket.onmessage = function(event) {
+      var message = event.data;
+      console.log("Received message: " + message);
+
+      var senderId = message.substring(0, message.indexOf(":"));
+      var messageContent = message.substring(message.indexOf(":") + 3);
+      if (senderId === friendId || senderId === currentUser) {
+  	    displayMessage(messageContent, senderId === currentUser);
+  	  }
+    };
+
+    socket.onclose = function() {
+      console.log("WebSocket connection closed for friend ID: " + friendId);
+    };
+
+    socket.onerror = function(error) {
+      console.log("WebSocket error for friend ID: " + friendId + ": " + error);
+    };
+  }
+
+  function sendMessage(event,friendId) {
+	  event.preventDefault();
+
+	  var messageInput = document.getElementById('messageInput');
+	  var message = messageInput.value;
+
+	  if (socket && socket.readyState === WebSocket.OPEN) {
+	    socket.send(currentUser + ":" + friendId + ":" + message);
+	    console.log("Sent message: " + message);
+
+	    displayMessage(message, true);
+
+	    messageInput.value = '';
+	  } else {
+	    console.log("WebSocket connection is not open or has been closed");
+	  }
+
+	  return false; // Prevent form submission
+	}
+
+  function displayMessage(message, isSender) {
+    console.log("Displaying message: " + message + " for receiver");
+
+    var messageList = document.getElementById("messageList");
+    var listItem = document.createElement("li");
+    listItem.className = isSender ? "you" : "me";
+
+    var entete = document.createElement("div");
+    entete.className = "entete";
+
+    var status = document.createElement("span");
+    status.className = "status green";
+    entete.appendChild(status);
+
+    var h2 = document.createElement("h2");
+    h2.textContent = isSender ? "Me" : "Friend";
+    entete.appendChild(h2);
+
+    var triangle = document.createElement("div");
+    triangle.className = "triangle";
+
+    var messageContent = document.createElement("div");
+    messageContent.className = "message";
+    messageContent.textContent = message;
+
+    listItem.appendChild(entete);
+    listItem.appendChild(triangle);
+    listItem.appendChild(messageContent);
+
+    messageList.appendChild(listItem);
+  }
 </script>
 
 </body>

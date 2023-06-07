@@ -51,11 +51,11 @@
 			    <% HttpSession accesssession = request.getSession(false);
 		         boolean checkAccess = accesssession != null && accesssession.getAttribute("checkAccess") != null && (boolean) accesssession.getAttribute("checkAccess");
 			    if(userLogin && checkAccess){%>
-				      <li><a href="#">My Account</a></li>
+				      <li><a href="editprofile.jsp">My Account</a></li>
 				      <li><a href="logout.jsp">Log Out</a></li>
 			      <%}else{ %>
 				      <li><a href="admindashboard">Admin Dashboard</a></li>
-				      <li><a href="#">My Account</a></li>
+				      <li><a href="editprofile.jsp">My Account</a></li>
 				      <li><a href="logout.jsp">Log Out</a></li>
 			      <%} %>
 			      
