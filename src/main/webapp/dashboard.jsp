@@ -43,16 +43,9 @@
  	<script>
   function openChatBox(friendName, friendId) {
     var friendNameElement = document.getElementById('friendName');
-    var wsidElement = document.getElementById('wsid');
-    var connectButton = document.getElementById('connectbutton');
     friendNameElement.textContent = "Chat with " + friendName;
-    wsidElement.textContent = friendId;
+    connect(friendId);
 
-    selectedFriendId = friendId;
-    connectbutton.style.display = selectedFriendId ? "inline-block" : "none";
-    
-    
-  
   }
 </script>
   </head>
@@ -212,7 +205,7 @@
 		    } %>
 		        <textarea id="messageInput" placeholder="Type your message"></textarea>
 		        <span style="display: none;" id="wsid"></span>
-		        <button style="display: none;" id="connectbutton" onclick="connect(document.getElementById('wsid').textContent); return false;">Connect</button>
+		        <!--  <button style="display: none;" id="connectbutton" onclick="connect(document.getElementById('wsid').textContent); return false;">Connect</button>-->
 		        
 		        <button id="send" type="submit">Send</button>
     			</form>
@@ -246,7 +239,8 @@
   var currentUser = '<%= currentUserId %>';
 
   function connect(friendId) {
-    var host = "ws://localhost:8080/lab1-chatapp/dashboard_servlet/" + friendId;
+	var senderId = currentUser;
+    var host = "ws://localhost:8080/lab1-chatapp/dashboard_servlet/" + friendId + "/" + senderId;
     console.log("Connect function called for friend ID: " + friendId);
 
     socket = new WebSocket(host); 

@@ -59,8 +59,8 @@ public class admindashboard extends HttpServlet {
 	    ArrayList<User> users = userDAO.selectallusers();
 	    contactsdb userDAO1 = new contactsdb();
 	    ArrayList<ContactGS> contacts = userDAO1.selectallcontacts();
-	    
-	    
+	  
+	   
 	    request.setAttribute("userList", users);
 	    request.setAttribute("contactList", contacts);
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("admindashboard.jsp");

@@ -1,6 +1,7 @@
 package WebSocket_Api;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +14,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint("/dashboard_servlet/{friendId}")
+@ServerEndpoint("/dashboard_servlet/{friendId}/{senderId}")
 public class WsEndPoint {
 
     private static final Map<String, Set<Session>> friendSessionsMap = new ConcurrentHashMap<>();
@@ -21,14 +22,18 @@ public class WsEndPoint {
 
     @OnOpen
     public void onOpen(Session session) {
+        String senderId = extractSenderId(session);
         String friendId = extractFriendId(session);
         if (friendId != null) {
-            friendSessionsMap.computeIfAbsent(friendId, key -> ConcurrentHashMap.newKeySet()).add(session);
-            session.getUserProperties().put("friendId", friendId);
-            addFriendSession(friendId, session);
+        	String id = friendId +"/" +senderId;
+            friendSessionsMap.computeIfAbsent(id, key -> ConcurrentHashMap.newKeySet()).add(session);
+            session.getUserProperties().put("id", id);
+            
+            addFriendSession(id, session);
             System.out.println("WebSocket opened for friend ID: " + friendId);
             System.out.println("Session ID: " + session.getId());
-            System.out.println("Total sessions for friend ID " + friendId + ": " + friendSessionsMap.get(friendId).size());
+            System.out.println("Total sessions for friend ID " + friendId + ": " + friendSessionsMap.get(id).size());
+            System.out.println("Session ID: " + session);
         } else {
             System.err.println("Failed to extract friend ID from the WebSocket connection URL");
             try {
@@ -42,11 +47,11 @@ public class WsEndPoint {
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         System.out.println("Received message: " + message);
-        String friendId1 = extractFriendId(session);
+        String friendId;
         String[] parts = message.split(":", 3);  
         if (parts.length == 3) {
             String senderId = parts[0].trim(); 
-            String friendId = parts[1].trim(); 
+             friendId = parts[1].trim(); 
             String messageContent = parts[2].trim();
         
             String displayMessage = messageContent;
@@ -58,7 +63,7 @@ public class WsEndPoint {
             }
             
             
-            if (friendId != null && friendId1.equals(friendId)) {
+            if (friendId != null) {
                 try {
                     sendToFriend(message, friendId, session, senderId); 
                 } catch (IOException e) {
@@ -69,41 +74,45 @@ public class WsEndPoint {
     }
 
     private void sendToFriend(String message, String friendId, Session senderSession, String senderId) throws IOException {
-        Set<Session> friendSessions = friendSessionsMap.get(senderId);
+    	String id = senderId + "/" +friendId;
+        Set<Session> friendSessions = friendSessionsMap.get(id);
 
         friendSessions.removeIf(session -> !session.isOpen());
-
+        System.out.println(friendSessions);
         System.out.println("Friend Sessions for friend ID " + friendId + ": " + friendSessions);
         System.out.println("Entering loop..." + senderId);
         System.out.println("Entering" + senderSession.getId());
 
         if (!friendSessions.isEmpty()) {
-            for (Session session : friendSessions) {
-                if (!session.getId().equals(senderSession.getId())) { 
+            
+            	Iterator<Session> iterator = friendSessions.iterator();
+                Session firstSession = iterator.next();
+                if (!firstSession.getId().equals(senderSession.getId())) { 
                     try {
-                        session.getBasicRemote().sendText(message);
-                        System.out.println("Sending message to session: " + session.getId());
+                    	firstSession.getBasicRemote().sendText(message);
+                        System.out.println("Sending message to session: " + firstSession.getId());
+                        System.out.println(friendSessions);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            }
         }
+            }
+        
 
-        System.out.println("Loop finished.");
-    }
+    
 
     @OnClose
     public void onClose(Session session) {
-        String friendId = (String) session.getUserProperties().get("friendId");
-        if (friendId != null) {
-            removeFriendSession(friendId, session);
-            System.out.println("WebSocket closed for friend ID: " + friendId);
-            Set<Session> friendSessions = friendSessionsMap.get(friendId);
+        String id = (String) session.getUserProperties().get("id");
+        if (id != null) {
+            removeFriendSession(id, session);
+            System.out.println("WebSocket closed for friend ID: " + id);
+            Set<Session> friendSessions = friendSessionsMap.get(id);
             if (friendSessions != null) {
-                System.out.println("Total sessions for friend ID " + friendId + ": " + friendSessions.size());
+                System.out.println("Total sessions for friend ID " + id + ": " + friendSessions.size());
             } else {
-                System.out.println("No sessions found for friend ID " + friendId);
+                System.out.println("No sessions found for friend ID " + id);
             }
         }
     }
@@ -115,6 +124,15 @@ public class WsEndPoint {
     }
 
     private String extractFriendId(Session session) {
+        String friendId = null;
+        String path = session.getRequestURI().getPath();
+        String[] pathParts = path.split("/");
+        if (pathParts.length >= 2) {
+            friendId = pathParts[pathParts.length - 2];
+        }
+        return friendId;
+    }
+    private String extractSenderId(Session session) {
         String friendId = null;
         String path = session.getRequestURI().getPath();
         String[] pathParts = path.split("/");

@@ -4,7 +4,7 @@ package CRUD_Users;
 
 public class User {
 	private String id,fname,lname,email,pword,access,salt;
-
+	
 
 	public User() {
 		super();

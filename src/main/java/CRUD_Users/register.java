@@ -34,6 +34,7 @@ public class register extends HttpServlet {
 		String password = request.getParameter("pword");
 		String fname = request.getParameter("fname");
 		String lname = request.getParameter("lname");
+	
 	    
 		byte[] salty = PasswordUtils.generateSalt();
 	    String salt = new String(Base64.getEncoder().encode(salty));

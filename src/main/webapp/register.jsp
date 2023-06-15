@@ -129,6 +129,7 @@
       <input placeholder="Confirm Password" id="input-33" type="password" name="confirm">
       </div>
       
+      
       <input type="submit" value="CONTINUE" name="submit">
     </form>
   </div>
